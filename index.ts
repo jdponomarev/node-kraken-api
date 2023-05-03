@@ -882,59 +882,6 @@ export class Kraken {
   }
 
   /**
-   * Edit an new order.
-   * **Note**: See the [AssetPairs](#operation/getTradableAssetPairs) endpoint for details on the available trading pairs, their price and quantity precisions, order minimums, available leverage, etc.
-   */
-  public editOrder(options: {
-    /*· {*/
-    /**
-     * Order id
-     */
-    orderid: string;
-    /**
-     * Asset pair `id` or `altname`.
-     */
-    pair: string;
-    /**
-     * Price
-     * * Limit price for `limit` orders
-     * * Trigger price for `stop-loss`, `stop-loss-limit`, `take-profit` and `take-profit-limit` orders
-     */
-    price?: string;
-    /**
-     * Secondary Price
-     * * Limit price for `stop-loss-limit` and `take-profit-limit` orders
-     * >  Note: Either `price` or `price2` can be preceded by `+`, `-`, or `#` to specify the order price as an offset relative to the last traded price. `+` adds the amount to, and `-` subtracts the amount from the last traded price. `#` will either add or subtract the amount to the last traded price, depending on the direction and order type used. Relative prices can be suffixed with a `%` to signify the relative amount as a percentage.
-     */
-    price2?: string;
-    /**
-     * Order quantity in terms of the base asset
-     * > Note: Volume can be specified as `0` for closing margin orders to automatically fill the requisite quantity.
-     */
-    volume?: string;
-    /**
-     * Comma delimited list of order flags
-     *   * `post` post-only order (available when ordertype = limit)
-     *   * `fcib` prefer fee in base currency (default if selling)
-     *   * `fciq` prefer fee in quote currency (default if buying, mutually exclusive with `fcib`)
-     *   * `nompp` disable [market price protection](https://support.kraken.com/hc/en-us/articles/201648183-Market-Price-Protection) for market orders
-     */
-    oflags?: string;
-    /**
-     * New User reference id
-     * user reference ID for new order (should be an integer in quotes)
-     */
-    newuserref?: number;
-    /**
-     * Validate inputs only. Do not submit order.
-     */
-    validate?: boolean;
-    /*· }*/
-  }): Promise<Kraken.EditOrder> {
-    return this.request("EditOrder", options, "private");
-  }
-
-  /**
    * Cancel a particular open order (or set of open orders) by `txid` or `userref`
    */
   public cancelOrder(options: {
@@ -1498,6 +1445,60 @@ export class Kraken {
       /*· }*/
     }): Promise<Kraken.WS.AddOrder> {
       return this.priv.request({ ...options, event: "addOrder" });
+    }
+
+    /** Request. Edit order.  */
+    public editOrder(options: {
+      /*· {*/
+      /** Session token string */
+      token: string;
+      /** Optional - client originated requestID sent as acknowledgment in the message response */
+      reqid?: number;
+      /**
+       * Order id
+       */
+      orderid: string;
+      /**
+       * Asset pair `id` or `altname`.
+       */
+      pair: string;
+      /**
+       * Price
+       * * Limit price for `limit` orders
+       * * Trigger price for `stop-loss`, `stop-loss-limit`, `take-profit` and `take-profit-limit` orders
+       */
+      price?: string;
+      /**
+       * Secondary Price
+       * * Limit price for `stop-loss-limit` and `take-profit-limit` orders
+       * >  Note: Either `price` or `price2` can be preceded by `+`, `-`, or `#` to specify the order price as an offset relative to the last traded price. `+` adds the amount to, and `-` subtracts the amount from the last traded price. `#` will either add or subtract the amount to the last traded price, depending on the direction and order type used. Relative prices can be suffixed with a `%` to signify the relative amount as a percentage.
+       */
+      price2?: string;
+      /**
+       * Order quantity in terms of the base asset
+       * > Note: Volume can be specified as `0` for closing margin orders to automatically fill the requisite quantity.
+       */
+      volume?: string;
+      /**
+       * Comma delimited list of order flags
+       *   * `post` post-only order (available when ordertype = limit)
+       *   * `fcib` prefer fee in base currency (default if selling)
+       *   * `fciq` prefer fee in quote currency (default if buying, mutually exclusive with `fcib`)
+       *   * `nompp` disable [market price protection](https://support.kraken.com/hc/en-us/articles/201648183-Market-Price-Protection) for market orders
+       */
+      oflags?: string;
+      /**
+       * New User reference id
+       * user reference ID for new order (should be an integer in quotes)
+       */
+      newuserref?: number;
+      /**
+       * Validate inputs only. Do not submit order.
+       */
+      validate?: boolean;
+      /*· }*/
+    }): Promise<Kraken.WS.EditOrder> {
+      return this.priv.request({ ...options, event: "editOrder" });
     }
 
     /**
@@ -3271,36 +3272,6 @@ export module Kraken {
   }
 
   /**
-   * @example {"cURL (Limit with conditional stop-loss)":{"value":{"error":[],"result":{"descr":{"order":"buy 2.12340000 XBTUSD @ limit 45000.1 with 2:1 leverage","close":"close position @ stop loss 38000.0 -> limit 36000.0"},"txid":["OUF4EM-FRGI2-MQMWZD"]}}},"Python (Limit)":{"value":{"error":[],"result":{"descr":{"order":"buy 1.25000000 XBTUSD @ limit 27500.0"},"txid":["OU22CG-KLAF2-FWUDD7"]}}}}
-   */
-  export type EditOrder = {
-    /*· {*/
-    /**
-     * Order description info.
-     */
-    descr?: {
-      /**
-       * Order description.
-       */
-      order?: string | null;
-      /**
-       * Conditional close order description, if applicable.
-       */
-      close?: string | null;
-    } | null;
-    /**
-     * Transaction IDs for order
-     * <br><sup><sub>(if order was added successfully)</sup></sub>
-     */
-    txid?: Array<string> | null;
-    originaltxid?: string;
-    /*· }*/
-  };
-  export module EditOrder {
-    export type Options = Exclude<FirstParam<Kraken["editOrder"]>, undefined>;
-  }
-
-  /**
    * @example {"count":1}
    */
   export type CancelOrder = {
@@ -4334,6 +4305,27 @@ export module Kraken {
     };
     export module AddOrder {
       export type Options = Exclude<FirstParam<Kraken["ws"]["addOrder"]>, undefined>;
+    }
+    export type EditOrder = {
+      /*· {*/
+
+      event?: "editOrderStatus";
+      /** Optional - client originated requestID sent as acknowledgment in the message response */
+      reqid?: number | null;
+      /** Status. "ok" or "error" */
+      status?: string | null;
+      /** order ID (if successful) */
+      txid?: string | null;
+      /** order description info (if successful) */
+      descr?: string | null;
+      /** error message (if unsuccessful) */
+      errorMessage?: string | null;
+      /** Original tx id */
+      originaltxid: string | null;
+      /*· }*/
+    };
+    export module EditOrder {
+      export type Options = Exclude<FirstParam<Kraken["ws"]["editOrder"]>, undefined>;
     }
 
     /**

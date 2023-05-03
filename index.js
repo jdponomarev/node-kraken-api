@@ -159,6 +159,9 @@ class Kraken {
             addOrder(options) {
                 return this.priv.request(Object.assign(Object.assign({}, options), { event: "addOrder" }));
             }
+            editOrder(options) {
+                return this.priv.request(Object.assign(Object.assign({}, options), { event: "editOrder" }));
+            }
             cancelOrder(options) {
                 return this.priv.requestMulti(Object.assign(Object.assign({}, options), { event: "cancelOrder" }), options.txid.length);
             }
@@ -306,9 +309,6 @@ class Kraken {
     }
     addOrder(options) {
         return this.request("AddOrder", options, "private");
-    }
-    editOrder(options) {
-        return this.request("EditOrder", options, "private");
     }
     cancelOrder(options) {
         return this.request("CancelOrder", options, "private");

@@ -144,16 +144,6 @@ export declare class Kraken {
         "close[price2]"?: string;
         validate?: boolean;
     }): Promise<Kraken.AddOrder>;
-    editOrder(options: {
-        orderid: string;
-        pair: string;
-        price?: string;
-        price2?: string;
-        volume?: string;
-        oflags?: string;
-        newuserref?: number;
-        validate?: boolean;
-    }): Promise<Kraken.EditOrder>;
     cancelOrder(options: {
         txid: string | number;
     }): Promise<Kraken.CancelOrder>;
@@ -277,6 +267,18 @@ export declare class Kraken {
             "close[price2]"?: string;
             trading_agreement?: string;
         }): Promise<Kraken.WS.AddOrder>;
+        editOrder(options: {
+            token: string;
+            reqid?: number;
+            orderid: string;
+            pair: string;
+            price?: string;
+            price2?: string;
+            volume?: string;
+            oflags?: string;
+            newuserref?: number;
+            validate?: boolean;
+        }): Promise<Kraken.WS.EditOrder>;
         cancelOrder(options: {
             token: string;
             reqid?: number;
@@ -795,17 +797,6 @@ export declare module Kraken {
     module AddOrder {
         type Options = Exclude<FirstParam<Kraken["addOrder"]>, undefined>;
     }
-    type EditOrder = {
-        descr?: {
-            order?: string | null;
-            close?: string | null;
-        } | null;
-        txid?: Array<string> | null;
-        originaltxid?: string;
-    };
-    module EditOrder {
-        type Options = Exclude<FirstParam<Kraken["editOrder"]>, undefined>;
-    }
     type CancelOrder = {
         count?: number | null;
         pending?: boolean | null;
@@ -1157,6 +1148,18 @@ export declare module Kraken {
         };
         module AddOrder {
             type Options = Exclude<FirstParam<Kraken["ws"]["addOrder"]>, undefined>;
+        }
+        type EditOrder = {
+            event?: "editOrderStatus";
+            reqid?: number | null;
+            status?: string | null;
+            txid?: string | null;
+            descr?: string | null;
+            errorMessage?: string | null;
+            originaltxid: string | null;
+        };
+        module EditOrder {
+            type Options = Exclude<FirstParam<Kraken["ws"]["editOrder"]>, undefined>;
         }
         type CancelOrder = Array<{
             event?: "cancelOrderStatus";
