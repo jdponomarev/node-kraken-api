@@ -882,6 +882,59 @@ export class Kraken {
   }
 
   /**
+   * Edit an new order.
+   * **Note**: See the [AssetPairs](#operation/getTradableAssetPairs) endpoint for details on the available trading pairs, their price and quantity precisions, order minimums, available leverage, etc.
+   */
+  public editOrder(options: {
+    /*· {*/
+    /**
+     * Order id
+     */
+    orderid: string;
+    /**
+     * Asset pair `id` or `altname`.
+     */
+    pair: string;
+    /**
+     * Price
+     * * Limit price for `limit` orders
+     * * Trigger price for `stop-loss`, `stop-loss-limit`, `take-profit` and `take-profit-limit` orders
+     */
+    price?: string;
+    /**
+     * Secondary Price
+     * * Limit price for `stop-loss-limit` and `take-profit-limit` orders
+     * >  Note: Either `price` or `price2` can be preceded by `+`, `-`, or `#` to specify the order price as an offset relative to the last traded price. `+` adds the amount to, and `-` subtracts the amount from the last traded price. `#` will either add or subtract the amount to the last traded price, depending on the direction and order type used. Relative prices can be suffixed with a `%` to signify the relative amount as a percentage.
+     */
+    price2?: string;
+    /**
+     * Order quantity in terms of the base asset
+     * > Note: Volume can be specified as `0` for closing margin orders to automatically fill the requisite quantity.
+     */
+    volume?: string;
+    /**
+     * Comma delimited list of order flags
+     *   * `post` post-only order (available when ordertype = limit)
+     *   * `fcib` prefer fee in base currency (default if selling)
+     *   * `fciq` prefer fee in quote currency (default if buying, mutually exclusive with `fcib`)
+     *   * `nompp` disable [market price protection](https://support.kraken.com/hc/en-us/articles/201648183-Market-Price-Protection) for market orders
+     */
+    oflags?: string;
+    /**
+     * New User reference id
+     * user reference ID for new order (should be an integer in quotes)
+     */
+    newuserref?: number;
+    /**
+     * Validate inputs only. Do not submit order.
+     */
+    validate?: boolean;
+    /*· }*/
+  }): Promise<Kraken.AddOrder> {
+    return this.request("EditOrder", options, "private");
+  }
+
+  /**
    * Cancel a particular open order (or set of open orders) by `txid` or `userref`
    */
   public cancelOrder(options: {

@@ -307,6 +307,9 @@ class Kraken {
     addOrder(options) {
         return this.request("AddOrder", options, "private");
     }
+    editOrder(options) {
+        return this.request("EditOrder", options, "private");
+    }
     cancelOrder(options) {
         return this.request("CancelOrder", options, "private");
     }
@@ -514,6 +517,12 @@ exports.Kraken = Kraken;
             Book.applyUpdate = applyUpdate;
         })(Book = WS.Book || (WS.Book = {}));
         class Connection extends ts_ev_1.Emitter {
+            get state() {
+                return this._state;
+            }
+            get socket() {
+                return this._socket;
+            }
             constructor(hostname, gettimeout) {
                 super();
                 this._state = "closed";
@@ -523,12 +532,6 @@ exports.Kraken = Kraken;
                 this._gettimeout = gettimeout;
                 this._setState("closed");
                 _hidePrivates(this);
-            }
-            get state() {
-                return this._state;
-            }
-            get socket() {
-                return this._socket;
             }
             ping() {
                 return __awaiter(this, void 0, void 0, function* () {

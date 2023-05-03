@@ -144,6 +144,16 @@ export declare class Kraken {
         "close[price2]"?: string;
         validate?: boolean;
     }): Promise<Kraken.AddOrder>;
+    editOrder(options: {
+        orderid: string;
+        pair: string;
+        price?: string;
+        price2?: string;
+        volume?: string;
+        oflags?: string;
+        newuserref?: number;
+        validate?: boolean;
+    }): Promise<Kraken.AddOrder>;
     cancelOrder(options: {
         txid: string | number;
     }): Promise<Kraken.CancelOrder>;
