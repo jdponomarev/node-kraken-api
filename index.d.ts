@@ -153,7 +153,7 @@ export declare class Kraken {
         oflags?: string;
         newuserref?: number;
         validate?: boolean;
-    }): Promise<Kraken.AddOrder>;
+    }): Promise<Kraken.EditOrder>;
     cancelOrder(options: {
         txid: string | number;
     }): Promise<Kraken.CancelOrder>;
@@ -794,6 +794,17 @@ export declare module Kraken {
     };
     module AddOrder {
         type Options = Exclude<FirstParam<Kraken["addOrder"]>, undefined>;
+    }
+    type EditOrder = {
+        descr?: {
+            order?: string | null;
+            close?: string | null;
+        } | null;
+        txid?: Array<string> | null;
+        originaltxid?: string;
+    };
+    module EditOrder {
+        type Options = Exclude<FirstParam<Kraken["editOrder"]>, undefined>;
     }
     type CancelOrder = {
         count?: number | null;

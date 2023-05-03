@@ -930,7 +930,7 @@ export class Kraken {
      */
     validate?: boolean;
     /*· }*/
-  }): Promise<Kraken.AddOrder> {
+  }): Promise<Kraken.EditOrder> {
     return this.request("EditOrder", options, "private");
   }
 
@@ -3268,6 +3268,36 @@ export module Kraken {
   };
   export module AddOrder {
     export type Options = Exclude<FirstParam<Kraken["addOrder"]>, undefined>;
+  }
+
+  /**
+   * @example {"cURL (Limit with conditional stop-loss)":{"value":{"error":[],"result":{"descr":{"order":"buy 2.12340000 XBTUSD @ limit 45000.1 with 2:1 leverage","close":"close position @ stop loss 38000.0 -> limit 36000.0"},"txid":["OUF4EM-FRGI2-MQMWZD"]}}},"Python (Limit)":{"value":{"error":[],"result":{"descr":{"order":"buy 1.25000000 XBTUSD @ limit 27500.0"},"txid":["OU22CG-KLAF2-FWUDD7"]}}}}
+   */
+  export type EditOrder = {
+    /*· {*/
+    /**
+     * Order description info.
+     */
+    descr?: {
+      /**
+       * Order description.
+       */
+      order?: string | null;
+      /**
+       * Conditional close order description, if applicable.
+       */
+      close?: string | null;
+    } | null;
+    /**
+     * Transaction IDs for order
+     * <br><sup><sub>(if order was added successfully)</sup></sub>
+     */
+    txid?: Array<string> | null;
+    originaltxid?: string;
+    /*· }*/
+  };
+  export module EditOrder {
+    export type Options = Exclude<FirstParam<Kraken["editOrder"]>, undefined>;
   }
 
   /**
